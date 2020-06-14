@@ -7,12 +7,14 @@ const (
 	htmlFilePath = "./static/start.html"
 )
 
-func NewUIHandler() http.Handler {
-	root := http.Dir(htmlFilePath)
-	return http.FileServer(root)
+func NewUIHandler() http.HandlerFunc {
+	return func(rw http.ResponseWriter, r *http.Request) {
+		http.ServeFile(rw, r, htmlFilePath)
+	}
 }
 
-func NewJSHandler() http.Handler {
-	root := http.Dir(jsBundlePath)
-	return http.FileServer(root)
+func NewJSHandler() http.HandlerFunc {
+	return func(rw http.ResponseWriter, r *http.Request) {
+		http.ServeFile(rw, r, jsBundlePath)
+	}
 }
