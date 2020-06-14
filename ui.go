@@ -8,9 +8,11 @@ const (
 )
 
 func NewUIHandler() http.Handler {
-	return http.FileServer(http.Dir(htmlFilePath))
+	root := http.Dir(htmlFilePath)
+	return http.FileServer(root)
 }
 
 func NewJSHandler() http.Handler {
-	return http.FileServer(http.Dir(jsBundlePath))
+	root := http.Dir(jsBundlePath)
+	return http.FileServer(root)
 }
