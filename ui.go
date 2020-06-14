@@ -3,7 +3,7 @@ package ui
 import (
 	"fmt"
 	"net/http"
-	"os"
+	"path/filepath"
 )
 
 const (
@@ -12,22 +12,22 @@ const (
 )
 
 func NewUIHandler() http.HandlerFunc {
-	file, err := os.Open(htmlFilePath)
+	filePath, err := filepath.Abs(htmlFilePath)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(file.Name())
+	fmt.Println(filePath)
 	return func(rw http.ResponseWriter, r *http.Request) {
 		http.ServeFile(rw, r, htmlFilePath)
 	}
 }
 
 func NewJSHandler() http.HandlerFunc {
-	file, err := os.Open(htmlFilePath)
+	filePath, err := filepath.Abs(jsBundlePath)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(file.Name())
+	fmt.Println(filePath)
 	return func(rw http.ResponseWriter, r *http.Request) {
 		http.ServeFile(rw, r, jsBundlePath)
 	}
