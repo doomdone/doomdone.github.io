@@ -19,7 +19,7 @@ func NewUIHandler() http.HandlerFunc {
 	}
 	fmt.Println(absolute)
 
-	file, err := os.Open(absolute)
+	file, err := os.Open(htmlFilePath)
 	if err != nil {
 		panic(err)
 	}
