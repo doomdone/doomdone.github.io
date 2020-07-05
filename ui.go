@@ -8,27 +8,26 @@ import (
 )
 
 const (
-	jsBundlePath = "./static/js/bundle.js"
-	htmlFilePath = "./static/start.html"
+	jsBundlePath = "static/js/bundle.js"
+	htmlFilePath = "static/start.html"
 )
 
 func NewUIHandler() http.HandlerFunc {
-	//absolute, err := filepath.Abs(htmlFilePath)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//fmt.Println(absolute)
-	//
-	//file, err := os.Open(htmlFilePath)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//fmt.Println(file.Name())
-	//
-	//return func(rw http.ResponseWriter, r *http.Request) {
-	//	http.ServeFile(rw, r, htmlFilePath)
-	//}
-	return http.FileServer(http.Dir("static")).ServeHTTP
+	absolute, err := filepath.Abs(htmlFilePath)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(absolute)
+
+	file, err := os.Open(htmlFilePath)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(file.Name())
+
+	return func(rw http.ResponseWriter, r *http.Request) {
+		http.ServeFile(rw, r, htmlFilePath)
+	}
 
 }
 
