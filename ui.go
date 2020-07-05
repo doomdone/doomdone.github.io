@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	jsBundlePath = "static/js/bundle.js"
-	htmlFilePath = "static/start.html"
+	jsBundlePath = "github.com/damino/ui/static/js/bundle.js"
+	htmlFilePath = "github.com/damino/ui/static/start.html"
 )
 
 func NewUIHandler() http.HandlerFunc {
