@@ -29,7 +29,9 @@ func init() {
 }
 
 func NewUIHandler() http.HandlerFunc {
+	fmt.Println("----------------------------------")
 	fmt.Println(string(htmlFile))
+	fmt.Println("----------------------------------")
 	//absolute, err := filepath.Abs(htmlFilePath)
 	//if err != nil {
 	//	log.Fatal(err)
@@ -59,7 +61,9 @@ func NewUIHandler() http.HandlerFunc {
 }
 
 func NewJSHandler() http.HandlerFunc {
+	fmt.Println("----------------------------------")
 	fmt.Println(string(jsBundle))
+	fmt.Println("----------------------------------")
 	//filePath, err := filepath.Abs(jsBundlePath)
 	//if err != nil {
 	//	panic(err)
