@@ -5,9 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
-	"path/filepath"
-	"reflect"
 )
 
 const (
@@ -18,12 +15,13 @@ const (
 var jsBundle, htmlFile []byte
 
 func init() {
-	jsBundle, err := ioutil.ReadFile(jsBundlePath)
+	var err error
+	jsBundle, err = ioutil.ReadFile(jsBundlePath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	htmlFile, err := ioutil.ReadFile(htmlFilePath)
+	htmlFile, err = ioutil.ReadFile(htmlFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,7 +29,7 @@ func init() {
 }
 
 func NewUIHandler() http.HandlerFunc {
-	fmt.Println(string(jsBundle))
+	fmt.Println(string(htmlFile))
 	//absolute, err := filepath.Abs(htmlFilePath)
 	//if err != nil {
 	//	log.Fatal(err)
@@ -77,7 +75,4 @@ func NewJSHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		http.ServeFile(rw, r, jsBundlePath)
 	}
-}
-
-type ui struct {
 }
