@@ -18,19 +18,19 @@ func NewUIHandler() http.HandlerFunc {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(absolute)
+	fmt.Printf("filepath.Abs(htmlFilePath) : %s\n", absolute)
 
 	twd, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(twd)
+	fmt.Printf("os.Getwd() : %s\n", twd)
 
 	file, err := os.Open(htmlFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(file.Name())
+	fmt.Printf("os.Open(htmlFilePath) : %s\n", file.Name())
 
 	return func(rw http.ResponseWriter, r *http.Request) {
 		http.ServeFile(rw, r, htmlFilePath)
