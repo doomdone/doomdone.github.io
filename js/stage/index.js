@@ -15,12 +15,13 @@ var config = {
 let stage = new Phaser.Game(config);
 
 gameScene.create = function() {
-    var graphics = this.add.graphics({ fillStyle: { color: color } });
-    var field = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, 200);
-
-    graphics.fillCircleShape(field);
-    graphics.setInteractive(field, PHASER.Geom.Circle.Contains);
-    graphics.on('pointerdown', start);
+    console.log("HERE");
+    // var graphics = this.add.graphics({ fillStyle: { color: color } });
+    // var field = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, 200);
+    //
+    // graphics.fillCircleShape(field);
+    // graphics.setInteractive(field, PHASER.Geom.Circle.Contains);
+    // graphics.on('pointerdown', start);
     
 
 
