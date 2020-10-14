@@ -3,21 +3,21 @@ var PHASER = require('phaser');
 
 const color = 0x000000;
 
+let gameScene = new Phaser.Scene("Game");
+
 var config = {
     width: window.innerWidth,
     height: window.innerHeight,
     type: Phaser.AUTO,
-    scene: {
-        create: create,
-    }
+    scene: gameScene
 };
 
-var stage = new Phaser.Game(config);
-var field = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, 200);
-var unit = new Phaser.Geon.Circle(window.innerWidth/2, window.innerHeight/2, 200);
+let stage = new Phaser.Game(config);
 
-function create () {
-    var graphics = this.add.graphics({ fillStyle: { color: 0x000000 } });
+gameScene.create = function() {
+    var graphics = this.add.graphics({ fillStyle: { color: color } });
+    var field = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, 200);
+
     graphics.fillCircleShape(field);
     graphics.setInteractive(field, PHASER.Geom.Circle.Contains);
     graphics.on('pointerdown', start);
@@ -29,7 +29,8 @@ function create () {
 }
 
 function start() {
-    stage.scaleManager
+    console.log("here");
+    // stage.scaleManager
 }
 
 // let stage = new PIXI.Application({
