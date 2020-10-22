@@ -1,6 +1,4 @@
 // index.js
 
-let root = {};
-
-let app = root.app = root.app || require('../stage/index');
-// document.body.appendChild(app.view);
+let stage = require('../stage/index')
+stage.init();

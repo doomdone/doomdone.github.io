@@ -1,45 +1,35 @@
-// index.js
-var PHASER = require('phaser');
+const color = "black";
 
-const color = 0x000000;
+let haze = require('../haze/index');
+let hail = require('../hail/index');
 
-let gameScene = new Phaser.Scene("Game");
+stage = {
+    init: function () {
+        let newStage = new createjs.Stage("havoqCanvas");
+        newStage.canvas.width = window.innerWidth;
+        newStage.canvas.height = window.innerHeight;
+        newStage.canvas.style.background = color;
 
-var config = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-    type: Phaser.AUTO,
-    scene: gameScene
-};
+        haze.init();
+        haze.onCanvas.addEventListener("click", handleClick);
+        newStage.addChild(haze.onCanvas);
 
-let stage = new Phaser.Game(config);
+        hail.init();
+        // haze.hail = hail;
+        newStage.addChild(hail.onCanvas);
 
-gameScene.create = function() {
-    var graphics = this.add.graphics({ fillStyle: { color: color } });
-    var field = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, 200);
-
-    graphics.fillCircleShape(field);
-    // graphics.setInteractive(field, PHASER.Geom.Circle.Contains);
-    // graphics.on('pointerdown', start);
-    
-
-
-    // let style = { font: "65px Arial", fill: 0xFF00FF, align: "center" };
-    // let text = stage.add.text(game.world.centerX, game.world.centerY, "start", style);
+        createjs.Ticker.addEventListener("tick", newStage);
+        this.onCanvas = newStage;
+    }
 }
 
-function start() {
-    console.log("here");
-    // stage.scaleManager
+function handleClick() {
+    haze.onCanvas.removeEventListener("click", handleClick);
+    haze.start();
+    hail.start();
 }
 
-// let stage = new PIXI.Application({
-//     width: window.innerWidth,
-//     height: window.innerHeight,
-//     autoStart: true,
-//     backgroundColor: color,
-// });
-//
-// stage.init = require('./init.js');
+//TODO when started remove old haze and add bigger one
+//problem: haze has a click handler but no nothing about stage
 
 module.exports = stage;
