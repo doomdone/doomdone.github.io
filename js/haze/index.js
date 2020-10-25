@@ -8,13 +8,17 @@ let haze = {
     y: window.innerHeight/2,
     size: size,
     init: function() {
+        haze.container = new createjs.Container();
         let newHaze = new createjs.Shape();
         newHaze.graphics.beginFill(color).drawCircle(this.x, this.y, this.size);
-        this.onCanvas = newHaze;
+        newHaze.name = "haze";
+        haze.container.addChild(newHaze);
     },
     start: function() {
-        haze.container = new createjs.Container();
-        haze.onCanvas.radius = 3000
+        let graphics = haze.container.getChildByName("haze").graphics;
+        graphics.command.radius = 3000;
+        graphics.command.x = -3000 / 2;
+        graphics.command.y = -3000 / 2;
         haze.started();
     },
     started: function() {

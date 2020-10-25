@@ -11,25 +11,30 @@ stage = {
         newStage.canvas.style.background = color;
 
         haze.init();
-        haze.onCanvas.addEventListener("click", handleClick);
-        newStage.addChild(haze.onCanvas);
+        haze.container.getChildByName("haze").addEventListener("click", handleClick);
 
         hail.init();
-        // haze.hail = hail;
-        newStage.addChild(hail.onCanvas);
+        haze.container.addChild(hail.container);
+        newStage.addChild(haze.container);
 
-        createjs.Ticker.addEventListener("tick", newStage);
+        // createjs.Ticker.addEventListener("tick", newStage);
+        createjs.Ticker.timingMode = createjs.Ticker.RAF;
+        createjs.Ticker.addEventListener("tick", tick);
+
+        setEventListeners();
         this.onCanvas = newStage;
     }
 }
 
 function handleClick() {
-    haze.onCanvas.removeEventListener("click", handleClick);
+    console.log("click");
+    haze.container.getChildByName("haze").removeEventListener("click", handleClick);
     haze.start();
     hail.start();
 }
 
-//TODO when started remove old haze and add bigger one
-//problem: haze has a click handler but no nothing about stage
+function tick(event) {
+    console.log("tick");
+}
 
 module.exports = stage;
