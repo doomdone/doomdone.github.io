@@ -7,8 +7,8 @@ const maxWidth = 60;
 const color = "#00FF40";
 
 let hail = {
-    x: window.innerWidth/2,
-    y: window.innerHeight/2,
+    x: 1000,
+    y: 1000,
     size: startSize,
     width: startWidth,
     color: color,

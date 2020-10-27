@@ -3,35 +3,41 @@ const color = "black";
 let haze = require('../haze/index');
 let hail = require('../hail/index');
 
-stage = {
-    init: function () {
-        let newStage = new createjs.Stage("havoqCanvas");
-        newStage.canvas.width = window.innerWidth;
-        newStage.canvas.height = window.innerHeight;
-        newStage.canvas.style.background = color;
+let stage = new createjs.Stage("havoqCanvas");
 
-        haze.init();
-        haze.container.getChildByName("haze").addEventListener("click", handleClick);
+(function () {
+    stage.canvas.width = window.innerWidth;
+    stage.canvas.height = window.innerHeight;
+    stage.canvas.style.background = color;
 
-        hail.init();
-        haze.container.addChild(hail.container);
-        newStage.addChild(haze.container);
+    haze.init();
+    haze.container.x = stage.canvas.width / 2;
+    haze.container.y = stage.canvas.height / 2;
 
-        // createjs.Ticker.addEventListener("tick", newStage);
-        createjs.Ticker.timingMode = createjs.Ticker.RAF;
-        createjs.Ticker.addEventListener("tick", tick);
-
-        setEventListeners();
-        this.onCanvas = newStage;
+    let text = require('../text/index');
+    text.init();
+    let handleClick = function() {
+        haze.container.removeChild(text.container);
+        haze.start();
+        hail.start();
     }
-}
+    text.container.getChildByName("hitzone").addEventListener("click", handleClick);
+    haze.container.addChild(text.container);
 
-function handleClick() {
-    console.log("click");
-    haze.container.getChildByName("haze").removeEventListener("click", handleClick);
-    haze.start();
-    hail.start();
-}
+    hail.init();
+    haze.container.addChild(hail.container);
+    stage.addChild(haze.container);
+
+    createjs.Ticker.addEventListener("tick", stage);
+    createjs.Ticker.timingMode = createjs.Ticker.RAF;
+    // createjs.Ticker.addEventListener("tick", tick);
+    // setEventListeners();
+
+    console.log(stage.x+" : "+stage.y);
+    stage.x -= haze.x;
+    stage.y -= haze.y;
+    console.log(stage.x+" : "+stage.y);
+})();
 
 function tick(event) {
     console.log("tick");
