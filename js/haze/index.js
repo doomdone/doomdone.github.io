@@ -18,7 +18,7 @@ let haze = {
         haze.started();
     },
     started: function() {
-        console.log(haze.container.getChildByName("haze").graphics);
+        console.log("haze started");
     }
 }
 
