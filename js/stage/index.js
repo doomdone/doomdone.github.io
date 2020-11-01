@@ -32,7 +32,7 @@ let stage = new createjs.Stage("havoqCanvas");
     stage.y = window.innerHeight/2 - hail.y;
 })();
 
-const playerMoveSpeed = 200;
+const playerMoveSpeed = 1000;
 const playerTurnSpeed = 60;
 const DEG_TO_RAD = Math.PI / 180;
 

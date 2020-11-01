@@ -1,6 +1,6 @@
 // index.js
 
-const size = 2000;
+const size = 15000;
 const color = "black";
 
 let haze = {
