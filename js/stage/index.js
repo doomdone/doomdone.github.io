@@ -1,5 +1,3 @@
-const color = "black";
-
 let haze = require('../haze/index');
 let hail = require('../hail/index');
 
@@ -10,11 +8,12 @@ let stage = new createjs.Stage("havoqCanvas");
     stage.canvas.height = window.innerHeight;
 
     haze.init();
-    haze.container.x = stage.canvas.width / 2;
-    haze.container.y = stage.canvas.height / 2;
+    hail.init();
+    haze.container.addChild(hail.container);
 
     let text = require('../text/index');
-    text.init();
+    text.init(hail);
+
     let handleClick = function() {
         haze.container.removeChild(text.container);
         haze.start();
@@ -23,18 +22,14 @@ let stage = new createjs.Stage("havoqCanvas");
     text.container.getChildByName("hitzone").addEventListener("click", handleClick);
     haze.container.addChild(text.container);
 
-    hail.init();
-    haze.container.addChild(hail.container);
     stage.addChild(haze.container);
 
-    // createjs.Ticker.addEventListener("tick", stage);
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
     createjs.Ticker.addEventListener("tick", tick);
     setEventListeners();
 
-    console.log(stage.x+" : "+stage.y);
-    stage.x -= haze.x;
-    stage.y -= haze.y;
+    stage.x = window.innerWidth/2 - hail.x;
+    stage.y = window.innerHeight/2 - hail.y;
 })();
 
 const playerMoveSpeed = 200;

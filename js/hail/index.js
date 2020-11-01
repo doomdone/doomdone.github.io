@@ -5,10 +5,12 @@ const minSize = 30;
 const startWidth = 20;
 const maxWidth = 60;
 const color = "#00FF40";
+const x = 1560;
+const y = 1560;
 
 let hail = {
-    x: 1000,
-    y: 1000,
+    x: x,
+    y: y,
     size: startSize,
     width: startWidth,
     color: color,
@@ -16,7 +18,7 @@ let hail = {
         hail.container = new createjs.Container();
         let newHail = new createjs.Shape();
         newHail.graphics.setStrokeStyle(this.width).beginStroke(this.color).drawCircle(this.x, this.y, this.size);
-        newHail.shadow = new createjs.Shadow(this.color, 0, 0, 40);
+        newHail.shadow = new createjs.Shadow(this.color, 0, 0, 4);
         newHail.name = "hail";
         hail.container.addChild(newHail);
     },

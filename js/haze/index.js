@@ -1,6 +1,6 @@
 // index.js
 
-const size = 1000;
+const size = 2000;
 const color = "black";
 
 let haze = {
@@ -10,7 +10,7 @@ let haze = {
     init: function() {
         haze.container = new createjs.Container();
         let newHaze = new createjs.Shape();
-        newHaze.graphics.beginFill(color).drawCircle(this.x, this.y, this.size);
+        newHaze.graphics.beginFill(color).drawCircle(this.size, this.size, this.size);
         newHaze.name = "haze";
         haze.container.addChild(newHaze);
     },

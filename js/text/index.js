@@ -1,20 +1,15 @@
 // index.js
 
-const size = 200;
 const color = "black";
-const textColor = "#00FF40";
 
 let text = {
-    x: 1000,
-    y: 1000,
-    size: size,
-    init: function() {
+    init: function(hail) {
         this.container = new createjs.Container();
         let hitZone = new createjs.Shape();
-        hitZone.graphics.beginFill(color).drawCircle(this.x, this.y, this.size);
+        hitZone.graphics.beginFill(color).drawCircle(hail.x, hail.y, hail.size);
         hitZone.name = "hitzone";
         this.container.addChild(hitZone);
-        let newText = new createjs.Text("start", "bold 60px Courier New", textColor);
+        let newText = new createjs.Text("start", "bold 60px Courier New", hail.color);
         let b = newText.getBounds();
         newText.x = 1000 - b.width / 2;
         newText.y = 1000 + b.height / 2;
