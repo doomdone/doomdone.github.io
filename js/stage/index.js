@@ -1,14 +1,41 @@
-let haze = require('../haze/index');
-let hail = require('../hail/index');
+let hz = require('../haze/index');
+let hi = require('../hail/index');
 
 let stage = new createjs.Stage("havoqCanvas");
 
-(function () {
+let load = function(url) {
+    let getData = new Promise((resolve, reject) => {
+        $.get( url, function(data) {
+            resolve(data);
+        })
+        .fail(function() {
+            reject( "failed to load hail data");
+        });
+    });
+    return getData.then(
+        function(data) {
+            return $.parseJSON(data);
+        },
+        function(error) {
+            console.log(error);
+        }
+    );
+}
+
+async function init() {
     stage.canvas.width = window.innerWidth;
     stage.canvas.height = window.innerHeight;
 
-    haze.init();
-    hail.init();
+    let loadHaze = load("https://havoq.herokuapp.com/haze");
+    let loadHail = load("https://havoq.herokuapp.com/hail");
+
+    let hazeData = await loadHaze;
+    let haze = window.haze = new hz.Haze(hazeData);
+    haze.draw();
+
+    let hailData = await loadHail;
+    let hail = window.hail = new hi.Hail(hailData);
+    hail.draw();
     haze.container.addChild(hail.container);
 
     let text = require('../text/index');
@@ -30,22 +57,25 @@ let stage = new createjs.Stage("havoqCanvas");
 
     stage.x = window.innerWidth/2 - hail.x;
     stage.y = window.innerHeight/2 - hail.y;
-})();
+}
 
 const playerMoveSpeed = 1000;
 const playerTurnSpeed = 60;
 const DEG_TO_RAD = Math.PI / 180;
 
 function tick(event) {
+    let haze = window.haze.container;
+    let hail = window.hail.container;
+
     if (inputs.moveForwards || inputs.moveBackwards || inputs.moveLeft || inputs.moveRight) {
-        var r = hail.container.rotation * DEG_TO_RAD;
+        var r = hail.rotation * DEG_TO_RAD;
         var cos = Math.cos(r);
         var sin = Math.sin(r);
 
         var tx = (inputs.moveForwards ? 1 : 0) + (inputs.moveBackwards ? -1 : 0);
         var ty = (inputs.moveLeft ? 1 : 0) + (inputs.moveRight ? -1 : 0);
 
-        //Normalise the movement so we dont go faster than max speed when moving at a diagonal.
+        // Normalise the movement so we dont go faster than max speed when moving at a diagonal.
         var m = Math.sqrt(tx * tx + ty + ty);
         if (m > 1) {
             tx = tx / m;
@@ -53,27 +83,27 @@ function tick(event) {
         }
 
         if (tx != 0 || ty != 0) {
-            hail.container.x += (cos * tx + sin * ty) * playerMoveSpeed * (event.delta / 1000);
-            hail.container.y += (sin * tx - cos * ty) * playerMoveSpeed * (event.delta / 1000);
+            hail.x += (cos * tx + sin * ty) * playerMoveSpeed * (event.delta / 1000);
+            hail.y += (sin * tx - cos * ty) * playerMoveSpeed * (event.delta / 1000);
         }
     }
 
     if (inputs.turnLeft || inputs.turnRight) {
         var tr = (inputs.turnLeft ? 1 : 0) + (inputs.turnRight ? -1 : 0);
         if (tr != 0) {
-            hail.container.rotation -= tr * playerTurnSpeed * (event.delta / 1000);
+            hail.rotation -= tr * playerTurnSpeed * (event.delta / 1000);
         }
     }
 
-    //make the player the center of the world
-    haze.container.regX = hail.container.x;
-    haze.container.regY = hail.container.y;
+    // make the player the center of the world
+    haze.regX = hail.x;
+    haze.regY = hail.y;
 
     if (inputs.toggleRotateCamera) {
         inputs.toggleRotateCamera = false;
         rotateCamera = !rotateCamera;
         if (!rotateCamera) {
-            haze.container.rotation = 0;
+            haze.rotation = 0;
         }
     }
 
@@ -124,4 +154,5 @@ function setEventListeners() {
     document.getElementById('havoqCanvas').focus();
 }
 
+init();
 module.exports = stage;
