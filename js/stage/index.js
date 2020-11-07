@@ -66,21 +66,15 @@ function mouseMove(event) {
 }
 
 const playerMoveSpeed = 1000;
-const playerTurnSpeed = 60;
-const DEG_TO_RAD = Math.PI / 180;
-
 
 function tick(event) {
-    let haze = window.haze.container;
-    let hail = window.haze.hail.container;
+    let hazec = window.haze.container;
+    let hail = window.haze.hail;
+    let hailc = hail.container;
 
     if (inputs.moveForwards || inputs.moveBackwards || inputs.moveLeft || inputs.moveRight) {
-        let r = hail.rotation * DEG_TO_RAD;
-        let cos = Math.cos(r);
-        let sin = Math.sin(r);
-
-        let tx = (inputs.moveForwards ? 1 : 0) + (inputs.moveBackwards ? -1 : 0);
-        let ty = (inputs.moveLeft ? 1 : 0) + (inputs.moveRight ? -1 : 0);
+        let tx = hail.speed.x;
+        let ty = hail.speed.y;
 
         // Normalise the movement so we dont go faster than max speed when moving at a diagonal.
         let m = Math.sqrt(tx * tx + ty * ty);
@@ -90,21 +84,14 @@ function tick(event) {
         }
 
         if (tx != 0 || ty != 0) {
-            hail.x += (cos * tx + sin * ty) * playerMoveSpeed * (event.delta / 1000);
-            hail.y += (sin * tx - cos * ty) * playerMoveSpeed * (event.delta / 1000);
-        }
-    }
-
-    if (inputs.turnLeft || inputs.turnRight) {
-        let tr = (inputs.turnLeft ? 1 : 0) + (inputs.turnRight ? -1 : 0);
-        if (tr != 0) {
-            hail.rotation -= tr * playerTurnSpeed * (event.delta / 1000);
+            hailc.x += tx * playerMoveSpeed * (event.delta / 1000);
+            hailc.y += ty * playerMoveSpeed * (event.delta / 1000);
         }
     }
 
     // make the player the center of the world
-    haze.regX = hail.x;
-    haze.regY = hail.y;
+    hazec.regX = hailc.x;
+    hazec.regY = hailc.y;
 
     stage.update(event);
 }
