@@ -34,7 +34,7 @@ async function init() {
     haze.draw();
 
     let hailData = await loadHail;
-    let hail = window.hail = new hi.Hail(hailData);
+    let hail = haze.hail = new hi.Hail(hailData);
     hail.draw();
     haze.container.addChild(hail.container);
 
@@ -43,12 +43,12 @@ async function init() {
 
     let handleClick = function() {
         haze.container.removeChild(text.container);
+        stage.addEventListener('stagemousemove', mouseMove)
         haze.start();
         hail.start();
     }
     text.container.getChildByName("hitzone").addEventListener("click", handleClick);
     haze.container.addChild(text.container);
-
     stage.addChild(haze.container);
 
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
@@ -59,13 +59,20 @@ async function init() {
     stage.y = window.innerHeight/2 - hail.y;
 }
 
+function mouseMove(event) {
+    let x1 = Math.floor(event.stageX - window.innerWidth / 2);
+    let y1 = Math.floor(event.stageY - window.innerHeight / 2);
+    window.haze.hail.mouseMove(x1,y1);
+}
+
 const playerMoveSpeed = 1000;
 const playerTurnSpeed = 60;
 const DEG_TO_RAD = Math.PI / 180;
 
+
 function tick(event) {
     let haze = window.haze.container;
-    let hail = window.hail.container;
+    let hail = window.haze.hail.container;
 
     if (inputs.moveForwards || inputs.moveBackwards || inputs.moveLeft || inputs.moveRight) {
         var r = hail.rotation * DEG_TO_RAD;
@@ -76,7 +83,7 @@ function tick(event) {
         var ty = (inputs.moveLeft ? 1 : 0) + (inputs.moveRight ? -1 : 0);
 
         // Normalise the movement so we dont go faster than max speed when moving at a diagonal.
-        var m = Math.sqrt(tx * tx + ty + ty);
+        var m = Math.sqrt(tx * tx + ty * ty);
         if (m > 1) {
             tx = tx / m;
             ty = ty / m;

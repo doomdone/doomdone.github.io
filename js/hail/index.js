@@ -4,25 +4,31 @@ const startSize = 200;
 const startWidth = 20;
 const maxWidth = 60;
 
-let defaultParams = function() {
+function DefaultParams() {
     this.x = 5000;
     this.y = 5000;
-    this.size = 200;
+    this.size = 30;
     this.color = "#00FF40";
     this.width = 60;
+}
+
+function Speed(x,y) {
+    this.x = x;
+    this.y = y;
 }
 
 export class Hail {
     constructor(hailData) {
         if (hailData == undefined) {
             console.log("set default params for hail");
-            hailData = defaultParams();
+            hailData = new DefaultParams();
         }
         this.x = hailData.x;
         this.y = hailData.y;
         this.size = hailData.size;
         this.color = hailData.color;
         this.width = startWidth;
+        this.speed = new Speed(0, 0);
     }
     draw() {
         this.container = new createjs.Container();
@@ -48,5 +54,12 @@ export class Hail {
     }
     play() {
         console.log("hail started");
+    }
+    mouseMove(x,y) {
+        console.log(x + " : " + y);
+        let hail = window.haze.hail.container.getChildByName("hail");
+        let x0 = hail.graphics.command.x;
+        let y0 = hail.graphics.command.y;
+        // console.log(x0 + " : " + y0);
     }
 }
