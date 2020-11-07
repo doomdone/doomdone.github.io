@@ -75,15 +75,15 @@ function tick(event) {
     let hail = window.haze.hail.container;
 
     if (inputs.moveForwards || inputs.moveBackwards || inputs.moveLeft || inputs.moveRight) {
-        var r = hail.rotation * DEG_TO_RAD;
-        var cos = Math.cos(r);
-        var sin = Math.sin(r);
+        let r = hail.rotation * DEG_TO_RAD;
+        let cos = Math.cos(r);
+        let sin = Math.sin(r);
 
-        var tx = (inputs.moveForwards ? 1 : 0) + (inputs.moveBackwards ? -1 : 0);
-        var ty = (inputs.moveLeft ? 1 : 0) + (inputs.moveRight ? -1 : 0);
+        let tx = (inputs.moveForwards ? 1 : 0) + (inputs.moveBackwards ? -1 : 0);
+        let ty = (inputs.moveLeft ? 1 : 0) + (inputs.moveRight ? -1 : 0);
 
         // Normalise the movement so we dont go faster than max speed when moving at a diagonal.
-        var m = Math.sqrt(tx * tx + ty * ty);
+        let m = Math.sqrt(tx * tx + ty * ty);
         if (m > 1) {
             tx = tx / m;
             ty = ty / m;
@@ -96,7 +96,7 @@ function tick(event) {
     }
 
     if (inputs.turnLeft || inputs.turnRight) {
-        var tr = (inputs.turnLeft ? 1 : 0) + (inputs.turnRight ? -1 : 0);
+        let tr = (inputs.turnLeft ? 1 : 0) + (inputs.turnRight ? -1 : 0);
         if (tr != 0) {
             hail.rotation -= tr * playerTurnSpeed * (event.delta / 1000);
         }
@@ -105,14 +105,6 @@ function tick(event) {
     // make the player the center of the world
     haze.regX = hail.x;
     haze.regY = hail.y;
-
-    if (inputs.toggleRotateCamera) {
-        inputs.toggleRotateCamera = false;
-        rotateCamera = !rotateCamera;
-        if (!rotateCamera) {
-            haze.rotation = 0;
-        }
-    }
 
     stage.update(event);
 }
