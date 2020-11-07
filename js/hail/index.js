@@ -55,11 +55,7 @@ export class Hail {
     play() {
         console.log("hail started");
     }
-    mouseMove(x,y) {
-        console.log(x + " : " + y);
-        let hail = window.haze.hail.container.getChildByName("hail");
-        let x0 = hail.graphics.command.x;
-        let y0 = hail.graphics.command.y;
-        // console.log(x0 + " : " + y0);
+    changeSpeed(x, y) {
+        this.speed = new Speed(x,y);
     }
 }

@@ -60,9 +60,9 @@ async function init() {
 }
 
 function mouseMove(event) {
-    let x1 = Math.floor(event.stageX - window.innerWidth / 2);
-    let y1 = Math.floor(event.stageY - window.innerHeight / 2);
-    window.haze.hail.mouseMove(x1,y1);
+    let speedX = Math.floor(event.stageX - window.innerWidth / 2);
+    let speedY = Math.floor(event.stageY - window.innerHeight / 2);
+    window.haze.hail.changeSpeed(speedX,speedY);
 }
 
 const playerMoveSpeed = 1000;
