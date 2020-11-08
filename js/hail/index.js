@@ -1,14 +1,17 @@
 // index.js
 
-export const startSize = 200;
-const startWidth = 20;
+const minSize = 30;
 
 function DefaultParams() {
     this.x = 5000;
     this.y = 5000;
     this.size = 30;
     this.color = "#00FF40";
-    this.width = 60;
+    this.width = width(this.size);
+}
+
+function width(size) {
+    return 2 * minSize**2/size;
 }
 
 function Speed(x,y) {
@@ -24,15 +27,19 @@ export class Hail {
         }
         this.x = hailData.x;
         this.y = hailData.y;
-        this.size = hailData.size;
+        if (hailData.size == undefined) {
+            this.size = minSize;
+        } else {
+            this.size = hailData.size;
+        }
         this.color = hailData.color;
-        this.width = startWidth;
+        this.width = width(this.size);
         this.speed = new Speed(0, 0);
     }
-    draw() {
+    draw(startSize) {
         this.container = new createjs.Container();
         let newHail = new createjs.Shape();
-        newHail.graphics.setStrokeStyle(this.width).beginStroke(this.color).drawCircle(this.x, this.y, startSize);
+        newHail.graphics.setStrokeStyle(width(startSize)).beginStroke(this.color).drawCircle(this.x, this.y, startSize);
         newHail.shadow = new createjs.Shadow(this.color, 0, 0, 30);
         newHail.name = "hail";
         this.container.addChild(newHail);

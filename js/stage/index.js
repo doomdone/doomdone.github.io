@@ -1,3 +1,5 @@
+const startSize = 200;
+
 let hz = require('../haze/index');
 let hi = require('../hail/index');
 
@@ -35,14 +37,14 @@ async function init() {
 
     let hailData = await loadHail;
     let hail = haze.hail = new hi.Hail(hailData);
-    hail.draw();
+    hail.draw(startSize);
     haze.container.addChild(hail.container);
 
     let text = require('../text/index');
     let hitzoneParams = {
         x: hail.x,
         y: hail.y,
-        size: hi.startSize,
+        size: startSize,
         color: hail.color,
     }
     text.init(hitzoneParams);
