@@ -1,8 +1,7 @@
 // index.js
 
-const startSize = 200;
+export const startSize = 200;
 const startWidth = 20;
-const maxWidth = 60;
 
 function DefaultParams() {
     this.x = 5000;
@@ -34,12 +33,12 @@ export class Hail {
         this.container = new createjs.Container();
         let newHail = new createjs.Shape();
         newHail.graphics.setStrokeStyle(this.width).beginStroke(this.color).drawCircle(this.x, this.y, startSize);
-        newHail.shadow = new createjs.Shadow(this.color, 0, 0, 40);
+        newHail.shadow = new createjs.Shadow(this.color, 0, 0, 30);
         newHail.name = "hail";
         this.container.addChild(newHail);
     }
     start() {
-        this.width = maxWidth;
+        this.width = 2 * this.size;
         let timeline = new createjs.Timeline();
         let graphics = this.container.getChildByName("hail").graphics;
         timeline.addTween(

@@ -39,7 +39,14 @@ async function init() {
     haze.container.addChild(hail.container);
 
     let text = require('../text/index');
-    text.init(hail);
+    let hitzoneParams = {
+        x: hail.x,
+        y: hail.y,
+        size: hi.startSize,
+        color: hail.color,
+    }
+    text.init(hitzoneParams);
+
 
     let handleClick = function() {
         haze.container.removeChild(text.container);
