@@ -77,11 +77,18 @@ function mouseMove(event) {
 const playerMoveSpeed = 1000;
 
 function tick(event) {
-    let hazec = window.haze.container;
+    let haze = window.haze;
     let hail = window.haze.hail;
+    let hazec = haze.container;
     let hailc = hail.container;
 
     if (inputs.moveForwards || inputs.moveBackwards || inputs.moveLeft || inputs.moveRight) {
+
+        let position = Math.sqrt(Math.pow(hail.x + hailc.x - haze.x, 2) + Math.pow(hail.y + hailc.y - haze.y, 2));
+        if (position > haze.size-hail.size-hail.width/2) {
+            console.log("here")
+        }
+
         let tx = hail.speed.x;
         let ty = hail.speed.y;
 

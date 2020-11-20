@@ -27,7 +27,7 @@ export class Hail {
         }
         this.x = hailData.x;
         this.y = hailData.y;
-        if (hailData.size == undefined) {
+        if (hailData.size == undefined || hailData.size < minSize) {
             this.size = minSize;
         } else {
             this.size = hailData.size;
