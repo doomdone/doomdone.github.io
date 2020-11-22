@@ -35,6 +35,7 @@ export class Hail {
         this.color = hailData.color;
         this.width = width(this.size);
         this.speed = new Speed(0, 0);
+        this.reverseSpeed = false;
     }
     draw(startSize) {
         this.container = new createjs.Container();

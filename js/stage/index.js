@@ -49,7 +49,6 @@ async function init() {
     }
     text.init(hitzoneParams);
 
-
     let handleClick = function() {
         haze.container.removeChild(text.container);
         stage.addEventListener('stagemousemove', mouseMove)
@@ -62,7 +61,6 @@ async function init() {
 
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
     createjs.Ticker.addEventListener("tick", tick);
-    setEventListeners();
 
     stage.x = window.innerWidth/2 - hail.x;
     stage.y = window.innerHeight/2 - hail.y;
@@ -71,26 +69,33 @@ async function init() {
 function mouseMove(event) {
     let speedX = Math.floor(event.stageX - window.innerWidth / 2);
     let speedY = Math.floor(event.stageY - window.innerHeight / 2);
-    window.haze.hail.changeSpeed(speedX,speedY);
+    let hail = haze.hail;
+    let inside = hail.size+hail.width/2;
+    console.log(speedX+" : "+speedY);
+    hail.reverseSpeed = false;
+    if (Math.sqrt(Math.pow(speedX, 2) + Math.pow(speedY, 2)) < inside) {
+        hail.changeSpeed(0,0);
+    } else {
+        hail.changeSpeed(speedX,speedY)
+    }
 }
 
 const playerMoveSpeed = 1000;
 
 function tick(event) {
-    let haze = window.haze;
-    let hail = window.haze.hail;
+    let hail = haze.hail;
     let hazec = haze.container;
     let hailc = hail.container;
 
-    if (inputs.moveForwards || inputs.moveBackwards || inputs.moveLeft || inputs.moveRight) {
-
+    if (hail.speed.x != 0 && hail.speed.y != 0) {
         let position = Math.sqrt(Math.pow(hail.x + hailc.x - haze.x, 2) + Math.pow(hail.y + hailc.y - haze.y, 2));
         if (position > haze.size-hail.size-hail.width/2) {
-            console.log("here")
+            hail.reverseSpeed = !hail.reverseSpeed;
         }
 
-        let tx = hail.speed.x;
-        let ty = hail.speed.y;
+
+        let tx = hail.reverseSpeed? -hail.speed.x: hail.speed.x;
+        let ty = hail.reverseSpeed? -hail.speed.y: hail.speed.y;
 
         // Normalise the movement so we dont go faster than max speed when moving at a diagonal.
         let m = Math.sqrt(tx * tx + ty * ty);
@@ -110,50 +115,6 @@ function tick(event) {
     hazec.regY = hailc.y;
 
     stage.update(event);
-}
-
-let inputs = {
-    turnLeft: false,
-    moveForwards: false,
-    turnRight: false,
-    moveBackwards: false,
-    moveLeft: false,
-    moveRight: false,
-    toggleRotateCamera: false,
-};
-
-let keyMappings = [];
-keyMappings[37] = 'turnLeft'; //left arrow
-keyMappings[38] = 'moveForwards'; //up arrow
-keyMappings[39] = 'turnRight'; //right arrow
-keyMappings[40] = 'moveBackwards'; //down arrow
-
-keyMappings[87] = 'moveForwards'; //w
-keyMappings[83] = 'moveBackwards'; //s
-keyMappings[65] = 'moveLeft'; // a
-keyMappings[68] = 'moveRight'; // d
-
-keyMappings[69] = 'toggleRotateCamera'; //e
-
-function setEventListeners() {
-    document.addEventListener('keydown', function(event) {
-        event.preventDefault();
-        var keyName = keyMappings[event.which];
-        if (keyName != undefined) {
-            inputs[keyName] = true;
-        }
-    }, true);
-
-    document.addEventListener('keyup', function(event) {
-        event.preventDefault();
-        var keyName = keyMappings[event.which];
-        if (keyName != undefined) {
-            inputs[keyName] = false;
-        }
-    }, true);
-
-    window.focus();
-    document.getElementById('havoqCanvas').focus();
 }
 
 init();
