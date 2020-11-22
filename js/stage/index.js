@@ -51,7 +51,7 @@ async function init() {
 
     let handleClick = function() {
         haze.container.removeChild(text.container);
-        stage.addEventListener('stagemousemove', mouseMove)
+        stage.addEventListener('stagemousemove', require("./events").mouseMove)
         haze.start();
         hail.start();
     }
@@ -60,61 +60,14 @@ async function init() {
     stage.addChild(haze.container);
 
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
-    createjs.Ticker.addEventListener("tick", tick);
+    let tickHandler = function(event) {
+        require('./tick').tick(event);
+        stage.update(event);
+    }
+    createjs.Ticker.addEventListener("tick", tickHandler);
 
     stage.x = window.innerWidth/2 - hail.x;
     stage.y = window.innerHeight/2 - hail.y;
-}
-
-function mouseMove(event) {
-    let speedX = Math.floor(event.stageX - window.innerWidth / 2);
-    let speedY = Math.floor(event.stageY - window.innerHeight / 2);
-    let hail = haze.hail;
-    let inside = hail.size+hail.width/2;
-    console.log(speedX+" : "+speedY);
-    hail.reverseSpeed = false;
-    if (Math.sqrt(Math.pow(speedX, 2) + Math.pow(speedY, 2)) < inside) {
-        hail.changeSpeed(0,0);
-    } else {
-        hail.changeSpeed(speedX,speedY)
-    }
-}
-
-const playerMoveSpeed = 1000;
-
-function tick(event) {
-    let hail = haze.hail;
-    let hazec = haze.container;
-    let hailc = hail.container;
-
-    if (hail.speed.x != 0 && hail.speed.y != 0) {
-        let position = Math.sqrt(Math.pow(hail.x + hailc.x - haze.x, 2) + Math.pow(hail.y + hailc.y - haze.y, 2));
-        if (position > haze.size-hail.size-hail.width/2) {
-            hail.reverseSpeed = !hail.reverseSpeed;
-        }
-
-
-        let tx = hail.reverseSpeed? -hail.speed.x: hail.speed.x;
-        let ty = hail.reverseSpeed? -hail.speed.y: hail.speed.y;
-
-        // Normalise the movement so we dont go faster than max speed when moving at a diagonal.
-        let m = Math.sqrt(tx * tx + ty * ty);
-        if (m > 1) {
-            tx = tx / m;
-            ty = ty / m;
-        }
-
-        if (tx != 0 || ty != 0) {
-            hailc.x += tx * playerMoveSpeed * (event.delta / 1000);
-            hailc.y += ty * playerMoveSpeed * (event.delta / 1000);
-        }
-    }
-
-    // make the player the center of the world
-    hazec.regX = hailc.x;
-    hazec.regY = hailc.y;
-
-    stage.update(event);
 }
 
 init();
