@@ -6,3 +6,7 @@ export function limit() {
     let hail = haze.hail;
     return haze.size - hail.size - hail.width/2;
 }
+
+export function coef(a,b,c) {
+    return Math.sqrt(Math.pow(c, 2) / (Math.pow(a,2) + Math.pow(b,2)));
+}

@@ -46,7 +46,6 @@ export class Hail {
         this.container.addChild(newHail);
     }
     start() {
-        this.width = 2 * this.size;
         let timeline = new createjs.Timeline();
         let graphics = this.container.getChildByName("hail").graphics;
         timeline.addTween(

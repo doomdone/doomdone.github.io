@@ -7,10 +7,6 @@ export function tick(event) {
     let hailc = hail.container;
 
     if (hail.speed.x != 0 && hail.speed.y != 0) {
-        if (utils.position(hail.x + hailc.x, hail.y + hailc.y) > utils.limit()) {
-            hail.reverseSpeed = !hail.reverseSpeed;
-        }
-
         let tx = hail.reverseSpeed? -hail.speed.x: hail.speed.x;
         let ty = hail.reverseSpeed? -hail.speed.y: hail.speed.y;
 
@@ -22,8 +18,17 @@ export function tick(event) {
         }
 
         if (tx != 0 || ty != 0) {
-            hailc.x += tx * playerMoveSpeed * (event.delta / 1000);
-            hailc.y += ty * playerMoveSpeed * (event.delta / 1000);
+            let stepX = tx * playerMoveSpeed * (event.delta / 1000);
+            let stepY = ty * playerMoveSpeed * (event.delta / 1000);
+            let pos = utils.position(hail.x + hailc.x + stepX, hail.y + hailc.y + stepY);
+            if (pos > utils.limit()) {
+                let coef = utils.coef(stepX, stepY, utils.limit() - pos);
+                stepX *= coef;
+                stepY *= coef;
+                hail.reverseSpeed = !hail.reverseSpeed;
+            }
+            hailc.x += stepX;
+            hailc.y += stepY;
         }
     }
 
