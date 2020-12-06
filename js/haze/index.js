@@ -4,6 +4,7 @@ const color = "black";
 const defaultSize = 5000;
 
 function DefaultParams(size) {
+    console.log("set default params for haze");
     this.x = size;
     this.y = size;
     this.size = size;
@@ -11,8 +12,7 @@ function DefaultParams(size) {
 
 export class Haze {
     constructor(hazeData) {
-        if (hazeData == undefined) {
-            console.log("set default params for haze");
+        if (hazeData === undefined) {
             hazeData = new DefaultParams(defaultSize);
         }
         this.x = hazeData.x;

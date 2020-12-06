@@ -1,5 +1,3 @@
-const startSize = 200;
-
 let hz = require('../haze/index');
 let hi = require('../hail/index');
 
@@ -37,26 +35,17 @@ async function init() {
 
     let hailData = await loadHail;
     let hail = haze.hail = new hi.Hail(hailData);
-    hail.draw(startSize);
+    hail.draw();
     haze.container.addChild(hail.container);
 
-    let text = require('../text/index');
-    let hitzoneParams = {
-        x: hail.x,
-        y: hail.y,
-        size: startSize,
-        color: hail.color,
-    }
-    text.init(hitzoneParams);
-
-    let handleClick = function() {
-        haze.container.removeChild(text.container);
+    let handleStartClick = function() {
         stage.addEventListener('stagemousemove', require("./events").mouseMove)
         haze.start();
         hail.start();
     }
-    text.container.getChildByName("hitzone").addEventListener("click", handleClick);
-    haze.container.addChild(text.container);
+    let text = hail.drawText(handleStartClick);
+    haze.container.addChild(text);
+
     stage.addChild(haze.container);
 
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
