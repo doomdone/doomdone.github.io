@@ -25,12 +25,13 @@ export class Haze {
         newHaze.graphics.beginFill(color).drawCircle(this.x, this.y, this.size);
         newHaze.name = "haze";
         this.container.addChild(newHaze);
-    };
-
+    }
     start() {
         this.play();
-    };
-
+    }
+    limit(hail) {
+        return this.size - hail.size - hail.width/2;
+    }
     play() {
         console.log("haze started");
     };

@@ -56,8 +56,28 @@ export class Hail {
     move() {
 
     }
-
-    changeSpeed(x, y) {
-        this.speed = new attrs.speed(x,y);
+    position(incrementX, incrementY) {
+        let x = this.x + this.container.x;
+        let y = this.y + this.container.y;
+        return mean(x - haze.x + incrementX, y - haze.y + incrementY)
     }
+    isInside(speedX, speedY) {
+        return mean(speedX, speedY) < this.size + this.width/2;
+    }
+    changeSpeed(event) {
+        let speedX = Math.floor(event.stageX - window.innerWidth / 2);
+        let speedY = Math.floor(event.stageY - window.innerHeight / 2);
+        if (this.position(speedX, speedY) < haze.limit(this)) {
+            this.reverseSpeed = false;
+        }
+        if (this.isInside(speedX, speedY)) {
+            this.speed = new attrs.speed(0,0);
+        } else {
+            this.speed = new attrs.speed(speedX, speedY)
+        }
+    }
+}
+
+function mean(x,y) {
+    return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))
 }

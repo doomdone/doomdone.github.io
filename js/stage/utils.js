@@ -1,5 +1,5 @@
 export function position(x,y) {
-    return Math.sqrt(Math.pow(x - haze.x, 2) + Math.pow(y - haze.y, 2))
+    return mean(x - haze.x, y - haze.y)
 }
 
 export function limit() {
@@ -9,4 +9,8 @@ export function limit() {
 
 export function coef(a,b,c) {
     return Math.sqrt(Math.pow(c, 2) / (Math.pow(a,2) + Math.pow(b,2)));
+}
+
+export function mean(x,y) {
+    return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))
 }

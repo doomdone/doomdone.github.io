@@ -38,8 +38,11 @@ async function init() {
     hail.draw();
     haze.container.addChild(hail.container);
 
+    let handler = function(event) {
+        hail.changeSpeed(event);
+    }
     let handleStartClick = function() {
-        stage.addEventListener('stagemousemove', require("./events").mouseMove)
+        stage.addEventListener('stagemousemove', handler)
         haze.start();
         hail.start();
     }
