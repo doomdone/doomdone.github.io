@@ -1,4 +1,5 @@
 export const minSize = 30;
+export const defaultSpeed = 1000;
 
 export function speed(x,y) {
     this.x = x;
@@ -15,4 +16,5 @@ export function getDefault() {
     this.y = 5000;
     this.size = 30;
     this.color = "#00FF40";
+    this.speed = defaultSpeed;
 }

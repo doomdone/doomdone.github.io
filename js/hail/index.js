@@ -1,6 +1,7 @@
 const startSize = 200;
 
 let attrs = require('./attributes');
+let utils = require('./utils');
 
 export class Hail {
     constructor(hailData) {
@@ -12,10 +13,14 @@ export class Hail {
         if (hailData.size === undefined || hailData.size < attrs.minSize) {
             hailData.size = attrs.minSize;
         }
+        if (hailData.speed === undefined || hailData.speed <= 0) {
+            hailData.speed = attrs.defaultSpeed;
+        }
         this.size = hailData.size;
         this.color = hailData.color;
         this.width = attrs.width(this.size);
         this.speed = new attrs.speed(0, 0);
+        this.maxSpeed = hailData.speed;
         this.reverseSpeed = false;
     }
     draw() {
@@ -50,12 +55,14 @@ export class Hail {
     }
     grow() {
         console.log("hail started to grow");
+        //TODO register grow event here
     }
     go() {
         console.log("hail can be moved now");
+        //TODO register tick events here
     }
-    move() {
-
+    move(delta) {
+        console.log("move");
     }
     position(incrementX, incrementY) {
         let x = this.x + this.container.x;
@@ -74,7 +81,13 @@ export class Hail {
         if (this.isInside(speedX, speedY)) {
             this.speed = new attrs.speed(0,0);
         } else {
-            this.speed = new attrs.speed(speedX, speedY)
+            // Normalise the movement so we don't go faster than max speed when moving at a diagonal.
+            let m = utils.mean(speedX, speedY)
+            if (m > 1) {
+                speedX = speedX / m;
+                speedY = speedY / m;
+            }
+            this.speed = new attrs.speed(speedX * this.maxSpeed, speedY * this.maxSpeed)
         }
     }
 }
