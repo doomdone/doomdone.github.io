@@ -1,15 +1,12 @@
 // index.js
 
-const color = "black";
-
-export function draw(params, start) {
+export function draw(params, start, parentContainer) {
     let container = new createjs.Container();
 
     let hitZone = new createjs.Shape();
-    hitZone.graphics.beginFill(color).drawCircle(params.x, params.y, params.size);
-    hitZone.name = "hitzone";
+    hitZone.graphics.beginFill(params.background).drawCircle(params.x, params.y, params.size);
     let clickHandler = function() {
-        haze.container.removeChild(container);
+        parentContainer.removeChild(container);
         start();
     }
     hitZone.addEventListener("click", clickHandler);
@@ -21,5 +18,5 @@ export function draw(params, start) {
     newText.y = params.y + b.height / 2;
     newText.textBaseline = "alphabetic";
     container.addChild(newText);
-    return container
+    parentContainer.addChild(container);
 }

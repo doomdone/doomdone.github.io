@@ -17,7 +17,7 @@ let load = function(url) {
             return $.parseJSON(data);
         },
         function(error) {
-            console.log(error);
+            console.log("failed to load data from '" + url + "': " + error);
         }
     );
 }
@@ -38,16 +38,14 @@ async function init() {
     hail.draw();
     haze.container.addChild(hail.container);
 
-    let handler = function(event) {
-        hail.changeSpeed(event);
-    }
     let handleStartClick = function() {
-        stage.addEventListener('stagemousemove', handler)
+        stage.addEventListener('stagemousemove', function(event) {
+            hail.changeSpeed(event);
+        })
         haze.start();
         hail.start();
     }
-    let text = hail.drawText(handleStartClick);
-    haze.container.addChild(text);
+    hail.drawText(handleStartClick);
 
     stage.addChild(haze.container);
 

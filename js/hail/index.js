@@ -33,8 +33,9 @@ export class Hail {
             y: this.y,
             size: startSize,
             color: this.color,
+            background: haze.color,
         }
-        return text.draw(hitzoneParams, listener);
+        text.draw(hitzoneParams, listener, haze.container);
     }
     start() {
         let timeline = new createjs.Timeline();
