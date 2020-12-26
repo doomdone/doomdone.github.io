@@ -62,7 +62,24 @@ export class Hail {
         //TODO register tick events here
     }
     move(delta) {
-        console.log("move");
+        let container = this.container;
+        if (this.speed.x == 0 && this.speed.y == 0) {
+            return;
+        }
+        let tx = this.reverseSpeed ? -this.speed.x : this.speed.x;
+        let ty = this.reverseSpeed ? -this.speed.y : this.speed.y;
+
+        let stepX = tx * delta;
+        let stepY = ty * delta;
+        let pos = utils.position(this.x + container.x + stepX, this.y + container.y + stepY);
+        if (pos > utils.limit()) {
+            let coef = utils.coef(stepX, stepY, utils.limit() - pos);
+            stepX *= coef;
+            stepY *= coef;
+            this.reverseSpeed = !this.reverseSpeed;
+        }
+        container.x += stepX;
+        container.y += stepY;
     }
     position(incrementX, incrementY) {
         let x = this.x + this.container.x;
