@@ -1,5 +1,7 @@
 let hz = require('../haze/index');
 let hi = require('../hail/index');
+let utils = require('./utils');
+
 
 let stage = new createjs.Stage("havoqCanvas");
 
@@ -40,7 +42,7 @@ async function init() {
 
     let handleStartClick = function() {
         stage.addEventListener('stagemousemove', function(event) {
-            hail.changeSpeed(event);
+            hail.changeDirection(event);
         })
         haze.start();
         hail.start();
@@ -51,7 +53,22 @@ async function init() {
 
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
     let tickHandler = function(event) {
-        require('./tick').tick(event);
+        if (!event.paused) {
+            let hailPt = hail.container.globalToLocal(stage.mouseX, stage.mouseY);
+            if (stage.mouseInBounds && !hail.container.hitTest(hailPt.x, hailPt.y)) {
+                let stepX = hail.speed.x * event.delta/1000;
+                let stepY = hail.speed.y * event.delta/1000;
+                let pos = utils.position(hail.x + hail.container.x + stepX, hail.y + hail.container.y + stepY);
+                if (pos > utils.limit()) {
+                        hail.changeSpeed(-hail.speed.x, -hail.speed.y);
+                }
+                hail.move(event.delta / 1000);
+
+            }
+            // make the player the center of the world
+            haze.container.regX = hail.container.x;
+            haze.container.regY = hail.container.y;
+        }
         stage.update(event);
     }
     createjs.Ticker.addEventListener("tick", tickHandler);

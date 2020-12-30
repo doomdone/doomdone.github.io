@@ -1,7 +1,6 @@
 const startSize = 200;
 
 let attrs = require('./attributes');
-let utils = require('./utils');
 
 export class Hail {
     constructor(hailData) {
@@ -19,9 +18,8 @@ export class Hail {
         this.size = hailData.size;
         this.color = hailData.color;
         this.width = attrs.width(this.size);
-        this.speed = new attrs.speed(0, 0);
+        this.changeSpeed(0, 0);
         this.maxSpeed = hailData.speed;
-        this.reverseSpeed = false;
     }
     draw() {
         this.container = new createjs.Container();
@@ -62,50 +60,29 @@ export class Hail {
         //TODO register tick events here
     }
     move(delta) {
-        let container = this.container;
-        if (this.speed.x == 0 && this.speed.y == 0) {
-            return;
-        }
-        let tx = this.reverseSpeed ? -this.speed.x : this.speed.x;
-        let ty = this.reverseSpeed ? -this.speed.y : this.speed.y;
-
-        let stepX = tx * delta;
-        let stepY = ty * delta;
-        let pos = utils.position(this.x + container.x + stepX, this.y + container.y + stepY);
-        if (pos > utils.limit()) {
-            let coef = utils.coef(stepX, stepY, utils.limit() - pos);
-            stepX *= coef;
-            stepY *= coef;
-            this.reverseSpeed = !this.reverseSpeed;
-        }
-        container.x += stepX;
-        container.y += stepY;
+        this.container.x += this.speed.x * delta;
+        this.container.y += this.speed.y * delta;
     }
     position(incrementX, incrementY) {
         let x = this.x + this.container.x;
         let y = this.y + this.container.y;
         return mean(x - haze.x + incrementX, y - haze.y + incrementY)
     }
-    isInside(speedX, speedY) {
-        return mean(speedX, speedY) < this.size + this.width/2;
-    }
-    changeSpeed(event) {
+    changeDirection(event) {
         let speedX = Math.floor(event.stageX - window.innerWidth / 2);
         let speedY = Math.floor(event.stageY - window.innerHeight / 2);
-        if (this.position(speedX, speedY) < haze.limit(this)) {
-            this.reverseSpeed = false;
+        // Normalise the movement so we don't go faster than max speed when moving at a diagonal.
+        let m = mean(speedX, speedY)
+        speedX /= m;
+        speedY /= m;
+
+        this.changeSpeed(speedX * this.maxSpeed, speedY * this.maxSpeed)
+    }
+    changeSpeed(x,y) {
+        if(this.container!==undefined) {
+            // console.log(this.container.x+", "+this.container.y+" set speed: "+x+", "+y);
         }
-        if (this.isInside(speedX, speedY)) {
-            this.speed = new attrs.speed(0,0);
-        } else {
-            // Normalise the movement so we don't go faster than max speed when moving at a diagonal.
-            let m = utils.mean(speedX, speedY)
-            if (m > 1) {
-                speedX = speedX / m;
-                speedY = speedY / m;
-            }
-            this.speed = new attrs.speed(speedX * this.maxSpeed, speedY * this.maxSpeed)
-        }
+        this.speed = new attrs.speed(x, y);
     }
 }
 
