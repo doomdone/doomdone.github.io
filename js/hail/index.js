@@ -18,7 +18,7 @@ export class Hail {
         this.size = hailData.size;
         this.color = hailData.color;
         this.width = attrs.width(this.size);
-        this.changeSpeed(0, 0);
+        this.setSpeed(0, 0);
         this.maxSpeed = hailData.speed;
     }
     draw() {
@@ -60,6 +60,8 @@ export class Hail {
         //TODO register tick events here
     }
     move(delta) {
+        // let x = this.speed.reverse ? -this.speed.x : this.speed.x;
+        // let y = this.speed.reverse ? -this.speed.y : this.speed.y;
         this.container.x += this.speed.x * delta;
         this.container.y += this.speed.y * delta;
     }
@@ -68,22 +70,29 @@ export class Hail {
         let y = this.y + this.container.y;
         return mean(x - haze.x + incrementX, y - haze.y + incrementY)
     }
-    changeDirection(event) {
-        let speedX = Math.floor(event.stageX - window.innerWidth / 2);
-        let speedY = Math.floor(event.stageY - window.innerHeight / 2);
+
+    setDirection(x,y) {
+        let speedX = Math.floor(x - window.innerWidth / 2);
+        let speedY = Math.floor(y - window.innerHeight / 2);
         // Normalise the movement so we don't go faster than max speed when moving at a diagonal.
         let m = mean(speedX, speedY)
         speedX /= m;
         speedY /= m;
+        //TODO if mouse position inside the hail - set speed to 0
 
-        this.changeSpeed(speedX * this.maxSpeed, speedY * this.maxSpeed)
+        this.setSpeed(speedX * this.maxSpeed, speedY * this.maxSpeed);
     }
-    changeSpeed(x,y) {
-        if(this.container!==undefined) {
-            // console.log(this.container.x+", "+this.container.y+" set speed: "+x+", "+y);
-        }
+
+    setSpeed(x,y) {
         this.speed = new attrs.speed(x, y);
     }
+    // changeSpeed(x,y) {
+    //     this.speed.x = x;
+    //     this.speed.y = y;
+    // }
+    // reverseSpeed() {
+    //     this.speed.reverse = !this.speed.reverse;
+    // }
 }
 
 function mean(x,y) {

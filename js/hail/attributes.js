@@ -4,7 +4,9 @@ export const defaultSpeed = 1000;
 export function speed(x,y) {
     this.x = x;
     this.y = y;
+    // this.reverse = false;
 }
+
 
 export function width(size) {
     return 2 * minSize**2/size;

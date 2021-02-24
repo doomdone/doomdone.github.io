@@ -2,7 +2,6 @@ let hz = require('../haze/index');
 let hi = require('../hail/index');
 let utils = require('./utils');
 
-
 let stage = new createjs.Stage("havoqCanvas");
 
 let load = function(url) {
@@ -11,7 +10,7 @@ let load = function(url) {
             resolve(data);
         })
         .fail(function() {
-            reject( "failed to load hail data");
+            reject( "failed to load data from "+url);
         });
     });
     return getData.then(
@@ -19,7 +18,7 @@ let load = function(url) {
             return $.parseJSON(data);
         },
         function(error) {
-            console.log("failed to load data from '" + url + "': " + error);
+            console.log("failed to parse data: '" + data + "': " + error);
         }
     );
 }
@@ -42,7 +41,10 @@ async function init() {
 
     let handleStartClick = function() {
         stage.addEventListener('stagemousemove', function(event) {
-            hail.changeDirection(event);
+            hail.setDirection(event.stageX, event.stageY)
+        })
+        stage.addEventListener('stagemouseup', function (event) {
+            console.log("fire");
         })
         haze.start();
         hail.start();
@@ -54,17 +56,21 @@ async function init() {
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
     let tickHandler = function(event) {
         if (!event.paused) {
+            // // let dir = hail.getDirection(stage.mouseX, stage.mouseY);
+            // // hail.changeSpeed(dir.x, dir.y);
             let hailPt = hail.container.globalToLocal(stage.mouseX, stage.mouseY);
+            // console.log(hailPt);
             if (stage.mouseInBounds && !hail.container.hitTest(hailPt.x, hailPt.y)) {
-                let stepX = hail.speed.x * event.delta/1000;
-                let stepY = hail.speed.y * event.delta/1000;
-                let pos = utils.position(hail.x + hail.container.x + stepX, hail.y + hail.container.y + stepY);
-                if (pos > utils.limit()) {
-                        hail.changeSpeed(-hail.speed.x, -hail.speed.y);
-                }
                 hail.move(event.delta / 1000);
-
             }
+            //     let stepX = hail.speed.x * event.delta/1000;
+            //     let stepY = hail.speed.y * event.delta/1000;
+            //     let pos = utils.position(hail.x + hail.container.x + stepX, hail.y + hail.container.y + stepY);
+            //     if (pos > utils.limit()) {
+            //         hail.reverseSpeed();
+            //     }
+
+            // }
             // make the player the center of the world
             haze.container.regX = hail.container.x;
             haze.container.regY = hail.container.y;
