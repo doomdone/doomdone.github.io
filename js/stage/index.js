@@ -1,6 +1,5 @@
 let hz = require('../haze/index');
 let hi = require('../hail/index');
-let utils = require('./utils');
 
 let stage = new createjs.Stage("havoqCanvas");
 
@@ -41,9 +40,14 @@ async function init() {
 
     let handleStartClick = function() {
         stage.addEventListener('stagemousemove', function(event) {
-            hail.setDirection(event.stageX, event.stageY)
+            let hazePt = haze.container.globalToLocal(stage.mouseX, stage.mouseY);
+            if (stage.mouseInBounds && haze.container.hitTest(hazePt.x, hazePt.y)) {
+                console.log("change direction");
+                //change direction only when mouse pointer is inside the haze
+                hail.setDirection(event.stageX, event.stageY)
+            }
         })
-        stage.addEventListener('stagemouseup', function (event) {
+        stage.addEventListener('stagemouseup', function(event) {
             console.log("fire");
         })
         haze.start();
@@ -56,21 +60,13 @@ async function init() {
     createjs.Ticker.timingMode = createjs.Ticker.RAF;
     let tickHandler = function(event) {
         if (!event.paused) {
-            // // let dir = hail.getDirection(stage.mouseX, stage.mouseY);
-            // // hail.changeSpeed(dir.x, dir.y);
+            //stop movement when mouse pointer inside the hail
             let hailPt = hail.container.globalToLocal(stage.mouseX, stage.mouseY);
-            // console.log(hailPt);
             if (stage.mouseInBounds && !hail.container.hitTest(hailPt.x, hailPt.y)) {
+                // console.log("move hail");
                 hail.move(event.delta / 1000);
             }
-            //     let stepX = hail.speed.x * event.delta/1000;
-            //     let stepY = hail.speed.y * event.delta/1000;
-            //     let pos = utils.position(hail.x + hail.container.x + stepX, hail.y + hail.container.y + stepY);
-            //     if (pos > utils.limit()) {
-            //         hail.reverseSpeed();
-            //     }
 
-            // }
             // make the player the center of the world
             haze.container.regX = hail.container.x;
             haze.container.regY = hail.container.y;
@@ -84,4 +80,5 @@ async function init() {
 }
 
 init();
+
 module.exports = stage;

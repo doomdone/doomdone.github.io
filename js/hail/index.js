@@ -1,6 +1,7 @@
 const startSize = 200;
 
 let attrs = require('./attributes');
+let utils = require('./utils');
 
 export class Hail {
     constructor(hailData) {
@@ -28,6 +29,7 @@ export class Hail {
         newHail.shadow = new createjs.Shadow(this.color, 0, 0, 30);
         newHail.name = "hail";
         this.container.addChild(newHail);
+        console.log(this.container.x + " : " + this.container.y);
     }
     drawText(listener) {
         let text = require('../text/index');
@@ -54,16 +56,21 @@ export class Hail {
     grow() {
         console.log("hail started to grow");
         //TODO register grow event here
+        //TODO here this is not what you expect (e.g. console.log(this)) - fix it
     }
     go() {
         console.log("hail can be moved now");
         //TODO register tick events here
+        //TODO here this is not what you expect (e.g. console.log(this)) - fix it
     }
     move(delta) {
-        // let x = this.speed.reverse ? -this.speed.x : this.speed.x;
-        // let y = this.speed.reverse ? -this.speed.y : this.speed.y;
-        this.container.x += this.speed.x * delta;
-        this.container.y += this.speed.y * delta;
+        let stepX = this.speed.x * delta;
+        let stepY = this.speed.y * delta;
+        let pos = utils.position(this.x + this.container.x + stepX, this.y + this.container.y + stepY);
+        if (pos <= utils.limit()) {
+            this.container.x += stepX;
+            this.container.y += stepY;
+        }
     }
     position(incrementX, incrementY) {
         let x = this.x + this.container.x;
@@ -72,27 +79,29 @@ export class Hail {
     }
 
     setDirection(x,y) {
+        console.log(this.container.x + " : " + this.container.y);
         let speedX = Math.floor(x - window.innerWidth / 2);
         let speedY = Math.floor(y - window.innerHeight / 2);
         // Normalise the movement so we don't go faster than max speed when moving at a diagonal.
         let m = mean(speedX, speedY)
         speedX /= m;
         speedY /= m;
-        //TODO if mouse position inside the hail - set speed to 0
+        let stepX = speedX * this.maxSpeed;
+        let stepY = speedY * this.maxSpeed;
 
-        this.setSpeed(speedX * this.maxSpeed, speedY * this.maxSpeed);
+        // let pos = utils.position(this.x + this.container.x, this.y + this.container.y);
+        // if (pos <= utils.limit()) {
+        //     console.log("here")
+        this.setSpeed(stepX, stepY);
+        // } else {
+        //     console.log("there")
+        //     this.setSpeed(-stepX, -stepY);
+        // }
     }
 
     setSpeed(x,y) {
         this.speed = new attrs.speed(x, y);
     }
-    // changeSpeed(x,y) {
-    //     this.speed.x = x;
-    //     this.speed.y = y;
-    // }
-    // reverseSpeed() {
-    //     this.speed.reverse = !this.speed.reverse;
-    // }
 }
 
 function mean(x,y) {

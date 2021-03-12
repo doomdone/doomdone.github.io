@@ -1,5 +1,5 @@
-export const minSize = 30;
-export const defaultSpeed = 1000;
+export const minSize = 10;
+export const defaultSpeed = 100;
 
 export function speed(x,y) {
     this.x = x;
