@@ -1,10 +1,9 @@
-export const minSize = 10;
+export const minSize = 70;
 export const defaultSpeed = 100;
 
 export function speed(x,y) {
     this.x = x;
     this.y = y;
-    // this.reverse = false;
 }
 
 

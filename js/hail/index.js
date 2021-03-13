@@ -69,8 +69,10 @@ export class Hail {
     move(delta) {
         let stepX = this.speed.x * delta;
         let stepY = this.speed.y * delta;
-        let pos = utils.mean(this.x + stepX, this.y + stepY);
-        if (pos > utils.limit()) {
+        let pos = utils.mean(this.x, this.y);
+        let posNext = utils.mean(this.x + stepX, this.y + stepY);
+        if (posNext > pos && posNext > utils.limit()) {
+            //reverse speed if hail touched the border and next step is pushing hail further
             this.setSpeed(-this.speed.x, -this.speed.y);
         }
         this.x += stepX;
@@ -88,15 +90,14 @@ export class Hail {
         speedY /= m;
         let stepX = speedX * this.maxSpeed;
         let stepY = speedY * this.maxSpeed;
-        //
-        let pos = utils.position(this.x + this.container.x, this.y + this.container.y);
-        if (pos <= utils.limit()) {
-            console.log("here")
-        } else {
-            console.log("there")
-        // //     this.setSpeed(-stepX, -stepY);
+
+        let pos = utils.mean(this.x, this.y);
+        let posFuture = utils.mean(this.x + stepX, this.y + stepY);
+        if (pos <= utils.limit() && posFuture <= utils.limit()) {
+            // to make sure that changing of speed doesn't affect crossing the border behavior
+            this.setSpeed(stepX, stepY);
         }
-        this.setSpeed(stepX, stepY);
+
     }
 
     setSpeed(x,y) {

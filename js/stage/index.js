@@ -40,11 +40,7 @@ async function init() {
 
     let handleStartClick = function() {
         stage.addEventListener('stagemousemove', function(event) {
-            let hazePt = haze.container.globalToLocal(stage.mouseX, stage.mouseY);
-            if (stage.mouseInBounds && haze.container.hitTest(hazePt.x, hazePt.y)) {
-                //change direction only when mouse pointer is inside the haze
-                hail.setDirection(event.stageX, event.stageY)
-            }
+            hail.setDirection(event.stageX, event.stageY)
         })
         stage.addEventListener('stagemouseup', function(event) {
             console.log("fire :"+ event.stageX+ ", "+event.stageY);
