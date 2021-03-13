@@ -42,7 +42,6 @@ async function init() {
         stage.addEventListener('stagemousemove', function(event) {
             let hazePt = haze.container.globalToLocal(stage.mouseX, stage.mouseY);
             if (stage.mouseInBounds && haze.container.hitTest(hazePt.x, hazePt.y)) {
-                console.log("change direction");
                 //change direction only when mouse pointer is inside the haze
                 hail.setDirection(event.stageX, event.stageY)
             }
@@ -70,13 +69,12 @@ async function init() {
             // make the player the center of the world
             // haze.container.regX = hail.container.x;
             // haze.container.regY = hail.container.y;
+            stage.x = stage.canvas.width/2 - hail.x;
+            stage.y = stage.canvas.height/2 - hail.y;
         }
         stage.update(event);
     }
     createjs.Ticker.addEventListener("tick", tickHandler);
-
-    stage.x = stage.canvas.width/2 - hail.x;
-    stage.y = stage.canvas.height/2 - hail.y;
 }
 
 init();

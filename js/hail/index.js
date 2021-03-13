@@ -69,13 +69,14 @@ export class Hail {
     move(delta) {
         let stepX = this.speed.x * delta;
         let stepY = this.speed.y * delta;
-        console.log((this.x + stepX) + " : " + (this.y + stepY));
         let pos = utils.mean(this.x + stepX, this.y + stepY);
-        console.log(pos + " : " + utils.limit());
-        if (pos <= utils.limit()) {
-            this.container.x += stepX;
-            this.container.y += stepY;
+        if (pos > utils.limit()) {
+            this.setSpeed(-this.speed.x, -this.speed.y);
         }
+        this.x += stepX;
+        this.y += stepY;
+        this.container.x = this.x;
+        this.container.y = this.y;
     }
 
     setDirection(x,y) {
@@ -87,15 +88,15 @@ export class Hail {
         speedY /= m;
         let stepX = speedX * this.maxSpeed;
         let stepY = speedY * this.maxSpeed;
-
-        // let pos = utils.position(this.x + this.container.x, this.y + this.container.y);
-        // if (pos <= utils.limit()) {
-        //     console.log("here")
+        //
+        let pos = utils.position(this.x + this.container.x, this.y + this.container.y);
+        if (pos <= utils.limit()) {
+            console.log("here")
+        } else {
+            console.log("there")
+        // //     this.setSpeed(-stepX, -stepY);
+        }
         this.setSpeed(stepX, stepY);
-        // } else {
-        //     console.log("there")
-        //     this.setSpeed(-stepX, -stepY);
-        // }
     }
 
     setSpeed(x,y) {
