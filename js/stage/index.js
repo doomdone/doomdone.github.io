@@ -58,19 +58,22 @@ async function init() {
             //stop movement when mouse pointer inside the hail
             let hailPt = hail.container.globalToLocal(stage.mouseX, stage.mouseY);
             if (stage.mouseInBounds && !hail.container.hitTest(hailPt.x, hailPt.y)) {
-                // console.log("move hail");
                 hail.move(event.delta / 1000);
             }
 
             // make the player the center of the world
-            // haze.container.regX = hail.container.x;
-            // haze.container.regY = hail.container.y;
             stage.x = stage.canvas.width/2 - hail.x;
             stage.y = stage.canvas.height/2 - hail.y;
         }
         stage.update(event);
     }
     createjs.Ticker.addEventListener("tick", tickHandler);
+    document.addEventListener('visibilitychange', function(ev) {
+        if(document.visibilityState == "hidden") {
+            //if we leave the page then stop hail move
+            hail.setSpeed(0, 0);
+        }
+    });
 }
 
 init();

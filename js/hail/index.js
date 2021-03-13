@@ -67,12 +67,15 @@ export class Hail {
         //TODO here this is not what you expect (e.g. console.log(this)) - fix it
     }
     move(delta) {
+        // console.log("move");
         let stepX = this.speed.x * delta;
         let stepY = this.speed.y * delta;
         let pos = utils.mean(this.x, this.y);
         let posNext = utils.mean(this.x + stepX, this.y + stepY);
+        // console.log(posNext + " : " + pos + " : " + utils.limit());
         if (posNext > pos && posNext > utils.limit()) {
             //reverse speed if hail touched the border and next step is pushing hail further
+            console.log("reverse speed");
             this.setSpeed(-this.speed.x, -this.speed.y);
         }
         this.x += stepX;
