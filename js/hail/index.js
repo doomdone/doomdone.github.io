@@ -25,11 +25,14 @@ export class Hail {
     draw() {
         this.container = new createjs.Container();
         let newHail = new createjs.Shape();
-        newHail.graphics.setStrokeStyle(attrs.width(startSize)).beginStroke(this.color).drawCircle(this.x, this.y, startSize);
+        newHail.graphics.setStrokeStyle(attrs.width(startSize)).beginStroke(this.color).drawCircle(0,0, startSize);
         newHail.shadow = new createjs.Shadow(this.color, 0, 0, 30);
         newHail.name = "hail";
+
         this.container.addChild(newHail);
-        console.log(this.container.x + " : " + this.container.y);
+        this.container.x = this.x;
+        this.container.y = this.y;
+
     }
     drawText(listener) {
         let text = require('../text/index');
@@ -66,20 +69,16 @@ export class Hail {
     move(delta) {
         let stepX = this.speed.x * delta;
         let stepY = this.speed.y * delta;
-        let pos = utils.position(this.x + this.container.x + stepX, this.y + this.container.y + stepY);
+        console.log((this.x + stepX) + " : " + (this.y + stepY));
+        let pos = utils.mean(this.x + stepX, this.y + stepY);
+        console.log(pos + " : " + utils.limit());
         if (pos <= utils.limit()) {
             this.container.x += stepX;
             this.container.y += stepY;
         }
     }
-    position(incrementX, incrementY) {
-        let x = this.x + this.container.x;
-        let y = this.y + this.container.y;
-        return mean(x - haze.x + incrementX, y - haze.y + incrementY)
-    }
 
     setDirection(x,y) {
-        console.log(this.container.x + " : " + this.container.y);
         let speedX = Math.floor(x - window.innerWidth / 2);
         let speedY = Math.floor(y - window.innerHeight / 2);
         // Normalise the movement so we don't go faster than max speed when moving at a diagonal.

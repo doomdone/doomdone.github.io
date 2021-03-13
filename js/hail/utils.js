@@ -1,7 +1,3 @@
-export function position(x,y) {
-    return mean(x - haze.x, y - haze.y)
-}
-
 export function limit() {
     let hail = haze.hail;
     return haze.size - hail.size - hail.width/2;

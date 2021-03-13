@@ -5,8 +5,6 @@ const defaultSize = 5000;
 
 function DefaultParams(size, color) {
     console.log("set default params for haze");
-    this.x = size;
-    this.y = size;
     this.size = size;
     this.color = color;
 }
@@ -16,8 +14,6 @@ export class Haze {
         if (hazeData === undefined) {
             hazeData = new DefaultParams(defaultSize, defaultColor);
         }
-        this.x = hazeData.x;
-        this.y = hazeData.y;
         this.size = hazeData.size;
         if (hazeData.color === undefined) {
             this.color = defaultColor;
@@ -28,7 +24,7 @@ export class Haze {
     draw() {
         this.container = new createjs.Container();
         let newHaze = new createjs.Shape();
-        newHaze.graphics.beginFill(this.color).drawCircle(this.x, this.y, this.size);
+        newHaze.graphics.beginFill(this.color).drawCircle(0, 0, this.size);
         newHaze.name = "haze";
         this.container.addChild(newHaze);
     }
