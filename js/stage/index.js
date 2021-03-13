@@ -1,45 +1,81 @@
-// index.js
-var PHASER = require('phaser');
+let hz = require('../haze/index');
+let hi = require('../hail/index');
 
-const color = 0x000000;
+let stage = new createjs.Stage("havoqCanvas");
 
-let gameScene = new Phaser.Scene("Game");
-
-var config = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-    type: Phaser.AUTO,
-    scene: gameScene
-};
-
-let stage = new Phaser.Game(config);
-
-gameScene.create = function() {
-    var graphics = this.add.graphics({ fillStyle: { color: color } });
-    var field = new Phaser.Geom.Circle(window.innerWidth/2, window.innerHeight/2, 200);
-
-    graphics.fillCircleShape(field);
-    // graphics.setInteractive(field, PHASER.Geom.Circle.Contains);
-    // graphics.on('pointerdown', start);
-    
-
-
-    // let style = { font: "65px Arial", fill: 0xFF00FF, align: "center" };
-    // let text = stage.add.text(game.world.centerX, game.world.centerY, "start", style);
+let load = function(url) {
+    let getData = new Promise((resolve, reject) => {
+        $.get( url, function(data) {
+            resolve(data);
+        })
+        .fail(function() {
+            reject( "failed to load data from "+url);
+        });
+    });
+    return getData.then(
+        function(data) {
+            return $.parseJSON(data);
+        },
+        function(error) {
+            console.log("failed to parse data: '" + data + "': " + error);
+        }
+    );
 }
 
-function start() {
-    console.log("here");
-    // stage.scaleManager
+async function init() {
+    stage.canvas.width = window.innerWidth;
+    stage.canvas.height = window.innerHeight;
+
+    let loadHaze = load("https://havoq.herokuapp.com/haze");
+    let loadHail = load("https://havoq.herokuapp.com/hail");
+
+    let hazeData = await loadHaze;
+    let haze = window.haze = new hz.Haze(hazeData);
+    haze.draw();
+
+    let hailData = await loadHail;
+    let hail = haze.hail = new hi.Hail(hailData);
+    hail.draw();
+    haze.container.addChild(hail.container);
+
+    let handleStartClick = function() {
+        stage.addEventListener('stagemousemove', function(event) {
+            hail.setDirection(event.stageX, event.stageY)
+        })
+        stage.addEventListener('stagemouseup', function(event) {
+            console.log("fire :"+ event.stageX+ ", "+event.stageY);
+        })
+        haze.start();
+        hail.start();
+    }
+    hail.drawText(handleStartClick);
+
+    stage.addChild(haze.container);
+
+    createjs.Ticker.timingMode = createjs.Ticker.RAF;
+    let tickHandler = function(event) {
+        if (!event.paused) {
+            //stop movement when mouse pointer inside the hail
+            let hailPt = hail.container.globalToLocal(stage.mouseX, stage.mouseY);
+            if (stage.mouseInBounds && !hail.container.hitTest(hailPt.x, hailPt.y)) {
+                hail.move(event.delta / 1000);
+            }
+
+            // make the player the center of the world
+            stage.x = stage.canvas.width/2 - hail.x;
+            stage.y = stage.canvas.height/2 - hail.y;
+        }
+        stage.update(event);
+    }
+    createjs.Ticker.addEventListener("tick", tickHandler);
+    document.addEventListener('visibilitychange', function(ev) {
+        if(document.visibilityState == "hidden") {
+            //if we leave the page then stop hail move
+            hail.setSpeed(0, 0);
+        }
+    });
 }
 
-// let stage = new PIXI.Application({
-//     width: window.innerWidth,
-//     height: window.innerHeight,
-//     autoStart: true,
-//     backgroundColor: color,
-// });
-//
-// stage.init = require('./init.js');
+init();
 
 module.exports = stage;
