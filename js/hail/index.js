@@ -1,4 +1,4 @@
-const startSize = 200;
+const maxSize = 200;
 
 let attrs = require('./attributes');
 let utils = require('./utils');
@@ -25,7 +25,7 @@ export class Hail {
     draw() {
         this.container = new createjs.Container();
         let newHail = new createjs.Shape();
-        newHail.graphics.setStrokeStyle(attrs.width(startSize)).beginStroke(this.color).drawCircle(0,0, startSize);
+        newHail.graphics.setStrokeStyle(attrs.width(maxSize)).beginStroke(this.color).drawCircle(0,0, maxSize);
         newHail.shadow = new createjs.Shadow(this.color, 0, 0, 30);
         newHail.name = "hail";
 
@@ -39,7 +39,7 @@ export class Hail {
         let hitzoneParams = {
             x: this.x,
             y: this.y,
-            size: startSize,
+            size: maxSize,
             color: this.color,
             background: haze.color,
         }
@@ -50,16 +50,24 @@ export class Hail {
         let graphics = this.container.getChildByName("hail").graphics;
         timeline.addTween(
             createjs.Tween.get(graphics.command, {loop: false})
-                .to({radius: this.size}, 1000).call(this.grow),
+                .to({radius: this.size}, 1000).call(this.growStarted),
             createjs.Tween.get(graphics._strokeStyle, {loop: false})
                 .to({width: this.width}, 1000).call(this.go)
         );
         timeline.gotoAndPlay(0);
     }
-    grow() {
+    growStarted() {
         console.log("hail started to grow");
-        //TODO register grow event here
-        //TODO here this is not what you expect (e.g. console.log(this)) - fix it
+        haze.hail.growInt = setInterval(() => haze.hail.grow(), 10000);
+    }
+    grow() {
+        if (this.size < maxSize) {
+            this.size++;
+            this.width = attrs.width(this.size);
+        } else {
+            console.log("hail has max size");
+            clearInterval(this.growInt);
+        }
     }
     go() {
         console.log("hail can be moved now");

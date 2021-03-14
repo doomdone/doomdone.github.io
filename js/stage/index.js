@@ -60,6 +60,9 @@ async function init() {
             if (stage.mouseInBounds && !hail.container.hitTest(hailPt.x, hailPt.y)) {
                 hail.move(event.delta / 1000);
             }
+            let hailShape = hail.container.getChildByName("hail").graphics;
+            hailShape.command.radius = hail.size;
+            hailShape._strokeStyle.width = hail.width;
 
             // make the player the center of the world
             stage.x = stage.canvas.width/2 - hail.x;
