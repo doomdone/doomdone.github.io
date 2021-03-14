@@ -61,8 +61,12 @@ async function init() {
                 hail.move(event.delta / 1000);
             }
             let hailShape = hail.container.getChildByName("hail").graphics;
-            hailShape.command.radius = hail.size;
-            hailShape._strokeStyle.width = hail.width;
+            let timeline = new createjs.Timeline();
+            timeline.addTween(
+                createjs.Tween.get(hailShape.command, {loop: false}).to({radius: hail.size}, 100),
+                createjs.Tween.get(hailShape._strokeStyle, {loop: false}).to({width: hail.width}, 100)
+            );
+            timeline.gotoAndPlay(0);
 
             // make the player the center of the world
             stage.x = stage.canvas.width/2 - hail.x;
